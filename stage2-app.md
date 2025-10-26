@@ -1,3 +1,10 @@
+# Stage 2: Updated App Component with View Routing
+
+## src/App.jsx
+
+Replace your existing App.jsx with this version that includes view routing:
+
+```javascript
 import { useEffect } from 'react';
 import './App.css';
 import Header from './components/Header';
@@ -42,3 +49,27 @@ function App() {
 }
 
 export default App;
+```
+
+## What Changed
+
+1. ✅ Renamed `CalendarGrid` to `MonthView`
+2. ✅ Added imports for `WeekView` and `DayView`
+3. ✅ Added `currentView` from store
+4. ✅ Created `renderView()` function that switches between views
+5. ✅ View selection based on `currentView` state
+
+## How It Works
+
+- The `renderView()` function checks the `currentView` state from Zustand
+- Based on the value ('month', 'week', or 'day'), it returns the appropriate component
+- When user clicks a button in ViewSwitcher, the view automatically changes
+- All views share the same event data and modal system
+
+## View Flow
+
+1. User clicks "Week" in ViewSwitcher
+2. `setView('week')` updates Zustand store
+3. `currentView` changes to 'week'
+4. `renderView()` detects change and returns `<WeekView />`
+5. React re-renders with new view

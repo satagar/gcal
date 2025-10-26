@@ -1,3 +1,10 @@
+# Stage 2: Updated Header Component
+
+## src/components/Header.jsx
+
+Replace the existing Header component with this enhanced version:
+
+```javascript
 import { useCalendarStore } from '../stores/useCalendarStore';
 import { useEventsStore } from '../stores/useEventsStore';
 import ViewSwitcher from './ViewSwitcher';
@@ -106,3 +113,25 @@ function Header() {
 }
 
 export default Header;
+```
+
+## What Changed
+
+1. ✅ Added `ViewSwitcher` component import
+2. ✅ Smart navigation - changes behavior based on current view:
+   - Month view: Navigate by month
+   - Week view: Navigate by week
+   - Day view: Navigate by day
+3. ✅ Smart date display - shows different formats:
+   - Month: "October 2025"
+   - Week: "Oct 20 - 26, 2025"
+   - Day: "October 26, 2025"
+4. ✅ Responsive layout with flexbox wrapping
+5. ✅ ViewSwitcher positioned in center
+
+## Key Features
+
+- **Context-Aware Navigation**: Prev/Next buttons adapt to current view
+- **Dynamic Date Display**: Shows appropriate date range for each view
+- **Clean Layout**: Three-section header (left, center, right)
+- **Responsive**: Wraps nicely on smaller screens
