@@ -13,7 +13,6 @@ function MonthView() {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const handleDateClick = (date) => {
-    // Open modal with pre-filled date
     openModal({
       startDateTime: date.hour(9).minute(0).toISOString(),
       endDateTime: date.hour(10).minute(0).toISOString(),
@@ -21,13 +20,14 @@ function MonthView() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
       {/* Week day headers */}
-      <div className="grid grid-cols-7 border-b border-gray-200">
+      <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50">
         {weekDays.map((day) => (
           <div
             key={day}
-            className="py-3 text-center text-sm font-semibold text-gray-700 border-r border-gray-200 last:border-r-0"
+            className="py-2 text-center text-xs font-medium uppercase tracking-wide border-r border-gray-200 last:border-r-0"
+            style={{ color: 'var(--text-secondary)' }}
           >
             {day}
           </div>
@@ -35,7 +35,7 @@ function MonthView() {
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 auto-rows-fr" style={{ minHeight: '600px' }}>
+      <div className="grid grid-cols-7" style={{ minHeight: '600px' }}>
         {days.map((day, index) => {
           const dayEvents = getEventsForDate(events, day);
           const isTodayDate = isToday(day);
@@ -46,29 +46,37 @@ function MonthView() {
               key={index}
               onClick={() => handleDateClick(day)}
               className={clsx(
-                'border-r border-b border-gray-200 p-2 cursor-pointer hover:bg-gray-50 transition-colors',
-                'min-h-[100px]',
-                !isInCurrentMonth && 'bg-gray-50 text-gray-400',
-                'last:border-r-0'
+                'border-r border-b p-2 cursor-pointer transition-colors min-h-[120px] last:border-r-0',
+                !isInCurrentMonth && 'bg-gray-50',
+                isInCurrentMonth && 'hover:bg-gray-50'
               )}
+              style={{ borderColor: 'var(--color-border)' }}
             >
-              <div
-                className={clsx(
-                  'text-sm font-medium mb-2 w-7 h-7 flex items-center justify-center rounded-full',
-                  isTodayDate && 'bg-blue-600 text-white',
-                  !isTodayDate && isInCurrentMonth && 'text-gray-900',
-                  !isTodayDate && !isInCurrentMonth && 'text-gray-400'
-                )}
-              >
-                {day.date()}
+              <div className="flex justify-center mb-2">
+                <div
+                  className={clsx(
+                    'w-8 h-8 flex items-center justify-center rounded-full text-sm transition-all',
+                    isTodayDate 
+                      ? 'font-medium text-white' 
+                      : isInCurrentMonth
+                        ? 'font-normal hover:bg-gray-200'
+                        : 'font-normal text-gray-400'
+                  )}
+                  style={isTodayDate ? {
+                    backgroundColor: 'var(--color-primary)',
+                    color: 'white'
+                  } : {}}
+                >
+                  {day.date()}
+                </div>
               </div>
 
-              <div className="space-y-1 overflow-hidden">
+              <div className="space-y-1">
                 {dayEvents.slice(0, 3).map((event) => (
                   <EventChip key={event.id} event={event} />
                 ))}
                 {dayEvents.length > 3 && (
-                  <div className="text-xs text-gray-500 px-2">
+                  <div className="text-xs px-1 py-0.5 hover:bg-gray-100 rounded cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                     +{dayEvents.length - 3} more
                   </div>
                 )}

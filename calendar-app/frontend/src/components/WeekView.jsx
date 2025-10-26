@@ -8,14 +8,10 @@ function WeekView() {
   const { selectedDate } = useCalendarStore();
   const { events, openModal } = useEventsStore();
 
-  // Generate 7 days starting from Sunday of the selected week
   const weekStart = selectedDate.startOf('week');
   const weekDays = Array.from({ length: 7 }, (_, i) => weekStart.add(i, 'day'));
-
-  // Generate time slots (24 hours)
   const timeSlots = Array.from({ length: 24 }, (_, i) => i);
 
-  // Get events for a specific day and hour
   const getEventsForSlot = (day, hour) => {
     return events.filter((event) => {
       const eventStart = dayjs(event.startDateTime);
@@ -23,7 +19,6 @@ function WeekView() {
     });
   };
 
-  // Get all-day events for a specific day
   const getAllDayEvents = (day) => {
     return events.filter((event) => {
       const eventStart = dayjs(event.startDateTime);
@@ -43,47 +38,27 @@ function WeekView() {
   const isToday = (day) => day.isSame(dayjs(), 'day');
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      {/* All-day events section */}
-      <div className="border-b border-gray-200">
-        <div className="grid grid-cols-8">
-          <div className="p-2 text-xs text-gray-500 border-r border-gray-200">All-day</div>
-          {weekDays.map((day, index) => {
-            const allDayEvents = getAllDayEvents(day);
-            return (
-              <div key={index} className="p-2 border-r border-gray-200 last:border-r-0 min-h-[60px]">
-                {allDayEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    onClick={() => openModal(event)}
-                    className="text-xs px-2 py-1 mb-1 rounded cursor-pointer hover:opacity-80 truncate"
-                    style={{ backgroundColor: event.color + '20', color: event.color }}
-                  >
-                    {event.title}
-                  </div>
-                ))}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Week header */}
-      <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-10">
-        <div className="p-2" /> {/* Empty cell for time column */}
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+      {/* Week header - sticky */}
+      <div className="grid grid-cols-8 border-b border-gray-200 bg-white sticky top-0 z-20">
+        <div className="w-16" /> {/* Time column spacer */}
         {weekDays.map((day, index) => (
           <div
             key={index}
             className={clsx(
-              'p-2 text-center border-r border-gray-200 last:border-r-0',
+              'py-3 text-center border-l border-gray-200 first:border-l-0',
               isToday(day) && 'bg-blue-50'
             )}
           >
-            <div className="text-xs text-gray-500">{day.format('ddd')}</div>
+            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              {day.format('ddd')}
+            </div>
             <div
               className={clsx(
-                'text-lg font-semibold mt-1',
-                isToday(day) ? 'text-blue-600' : 'text-gray-900'
+                'mt-1 w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-medium',
+                isToday(day)
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700'
               )}
             >
               {day.date()}
@@ -92,13 +67,51 @@ function WeekView() {
         ))}
       </div>
 
+      {/* All-day events section */}
+      {weekDays.some(day => getAllDayEvents(day).length > 0) && (
+        <div className="border-b border-gray-200 bg-gray-50">
+          <div className="grid grid-cols-8">
+            <div className="w-16 p-2 text-xs text-gray-500 font-medium border-r border-gray-200 flex items-center">
+              All-day
+            </div>
+            {weekDays.map((day, index) => {
+              const allDayEvents = getAllDayEvents(day);
+              return (
+                <div key={index} className="p-1.5 border-l border-gray-200 first:border-l-0 min-h-[48px]">
+                  {allDayEvents.map((event) => (
+                    <div
+                      key={event.id}
+                      onClick={() => openModal(event)}
+                      className="px-2 py-1 mb-1 rounded text-xs font-medium cursor-pointer hover:shadow-md transition-shadow truncate"
+                      style={{ 
+                        backgroundColor: event.color, 
+                        color: 'white',
+                        borderLeft: `3px solid ${event.color}`
+                      }}
+                    >
+                      {event.title}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Time grid */}
       <div className="overflow-y-auto" style={{ maxHeight: '600px' }}>
         {timeSlots.map((hour) => (
-          <div key={hour} className="grid grid-cols-8 border-b border-gray-200" style={{ minHeight: '60px' }}>
+          <div 
+            key={hour} 
+            className="grid grid-cols-8 border-b border-gray-100 hover:bg-gray-50 transition-colors" 
+            style={{ height: '48px' }}
+          >
             {/* Time label */}
-            <div className="p-2 text-xs text-gray-500 border-r border-gray-200">
-              {dayjs().hour(hour).minute(0).format('h A')}
+            <div className="w-16 pr-2 pt-1 text-right">
+              <span className="text-xs text-gray-500 font-normal">
+                {dayjs().hour(hour).minute(0).format('h A')}
+              </span>
             </div>
 
             {/* Day cells */}
@@ -108,7 +121,10 @@ function WeekView() {
                 <div
                   key={dayIndex}
                   onClick={() => handleSlotClick(day, hour)}
-                  className="border-r border-gray-200 last:border-r-0 p-1 cursor-pointer hover:bg-gray-50 transition-colors"
+                  className={clsx(
+                    'border-l border-gray-200 first:border-l-0 px-1 py-0.5 cursor-pointer relative',
+                    isToday(day) && 'bg-blue-50 bg-opacity-30'
+                  )}
                 >
                   {slotEvents.map((event) => (
                     <div
@@ -117,11 +133,18 @@ function WeekView() {
                         e.stopPropagation();
                         openModal(event);
                       }}
-                      className="text-xs px-2 py-1 mb-1 rounded cursor-pointer hover:opacity-80"
-                      style={{ backgroundColor: event.color, color: 'white' }}
+                      className="rounded px-2 py-1 mb-1 cursor-pointer hover:shadow-md transition-shadow"
+                      style={{ 
+                        backgroundColor: event.color,
+                        color: 'white',
+                        borderLeft: `3px solid ${event.color}`,
+                        filter: 'brightness(1.05)'
+                      }}
                     >
-                      <div className="font-medium truncate">{event.title}</div>
-                      <div className="text-[10px] opacity-90">
+                      <div className="text-xs font-medium truncate leading-tight">
+                        {event.title}
+                      </div>
+                      <div className="text-[10px] opacity-90 truncate">
                         {formatTime(event.startDateTime)}
                       </div>
                     </div>
