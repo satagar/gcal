@@ -81,7 +81,10 @@ function WeekView() {
                   {allDayEvents.map((event) => (
                     <div
                       key={event.id}
-                      onClick={() => openModal(event)}
+                      onClick={(e) => {
+                      e.stopPropagation();
+                      openModal(event);
+                    }}
                       className="px-2 py-1 mb-1 rounded text-xs font-medium cursor-pointer hover:shadow-md transition-shadow truncate"
                       style={{ 
                         backgroundColor: event.color, 

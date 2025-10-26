@@ -11,21 +11,17 @@ function ViewSwitcher() {
   ];
 
   return (
-    <div className="inline-flex rounded-lg border border-gray-300 bg-white">
+    <div className="inline-flex rounded-lg border border-gray-300 bg-white overflow-hidden">
       {views.map((view) => (
         <button
           key={view.id}
           onClick={() => setView(view.id)}
           className={clsx(
-            'px-5 py-2 text-sm font-medium',
-            'first:rounded-l-lg last:rounded-r-lg',
-            'border border-gray-300 bg-white shadow-sm',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
-            'transition-colors transition-shadow duration-150',
+            'px-4 py-2 text-sm font-medium transition-colors',
+            'border-r border-gray-300 last:border-r-0',
             currentView === view.id
-              ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-              : 'text-gray-800 hover:bg-gray-50 active:bg-gray-100 hover:shadow-md',
-            'select-none'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-100'
           )}
         >
           {view.label}

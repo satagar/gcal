@@ -6,7 +6,10 @@ function EventChip({ event }) {
 
   return (
     <div
-      onClick={() => openModal(event)}
+      onClick={(e) =>{
+        e.stopPropagation();
+        openModal(event);
+      } }
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openModal(event); }}
       role="button"
       tabIndex={0}

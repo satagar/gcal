@@ -16,32 +16,32 @@ function EventModal() {
 
   const [errors, setErrors] = useState({});
 
-  // Pre-fill form when editing or creating with date
-  useEffect(() => {
-    if (selectedEvent) {
-      setFormData({
-        title: selectedEvent.title || '',
-        description: selectedEvent.description || '',
-        startDateTime: selectedEvent.startDateTime 
-          ? dayjs(selectedEvent.startDateTime).format('YYYY-MM-DDTHH:mm')
-          : '',
-        endDateTime: selectedEvent.endDateTime 
-          ? dayjs(selectedEvent.endDateTime).format('YYYY-MM-DDTHH:mm')
-          : '',
-        color: selectedEvent.color || '#3b82f6',
-      });
-    } else {
+useEffect(() => {
+  if (!isModalOpen) return;
+  if (selectedEvent) {
+    setFormData({
+      title: selectedEvent.title || '',
+      description: selectedEvent.description || '',
+      startDateTime: selectedEvent.startDateTime 
+        ? dayjs(selectedEvent.startDateTime).format('YYYY-MM-DDTHH:mm')
+        : '',
+      endDateTime: selectedEvent.endDateTime 
+        ? dayjs(selectedEvent.endDateTime).format('YYYY-MM-DDTHH:mm')
+        : '',
+      color: selectedEvent.color || '#3b82f6',
+    });
+  } else {
       // Reset form
-      setFormData({
-        title: '',
-        description: '',
-        startDateTime: '',
-        endDateTime: '',
-        color: '#3b82f6',
-      });
-    }
-    setErrors({});
-  }, [selectedEvent, isModalOpen]);
+    setFormData({
+      title: '',
+      description: '',
+      startDateTime: '',
+      endDateTime: '',
+      color: '#3b82f6',
+    });
+  }
+  setErrors({});
+}, [selectedEvent, isModalOpen]);
 
   const validate = () => {
     const newErrors = {};
@@ -111,7 +111,7 @@ function EventModal() {
   if (!isModalOpen) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
