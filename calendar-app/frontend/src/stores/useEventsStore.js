@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/events';
+const API_URL = '/api/events';
 
 export const useEventsStore = create((set, get) => ({
   events: [],
