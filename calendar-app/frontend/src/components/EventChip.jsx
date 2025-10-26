@@ -7,12 +7,13 @@ function EventChip({ event }) {
   return (
     <div
       onClick={() => openModal(event)}
-      className="text-xs px-2 py-1 mb-1 rounded cursor-pointer hover:opacity-80 transition-opacity truncate"
-      style={{ backgroundColor: event.color + '20', color: event.color }}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openModal(event); }}
+      role="button"
+      tabIndex={0}
+      className="event-card mb-2 cursor-pointer hover:opacity-90 transition-opacity"
+      style={{ borderLeftColor: event.color, backgroundColor: event.color + '20', color: event.color }}
     >
-      <span className="font-medium">{formatTime(event.startDateTime)}</span>
-      {' '}
-      <span>{event.title}</span>
+      <div className="event-title text-xs">{formatTime(event.startDateTime)} — {event.title}</div>
     </div>
   );
 }

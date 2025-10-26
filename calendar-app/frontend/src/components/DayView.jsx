@@ -50,11 +50,11 @@ function DayView() {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 bg-blue-50">
-        <div className="text-sm text-gray-500">
+      <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-primary-100)' }}>
+        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           {selectedDate.format('dddd')}
         </div>
-        <div className="text-2xl font-bold text-gray-900">
+        <div className="text-2xl font-medium" style={{ color: 'var(--text-primary)' }}>
           {selectedDate.format('MMMM D, YYYY')}
         </div>
       </div>
@@ -68,8 +68,8 @@ function DayView() {
               <div
                 key={event.id}
                 onClick={() => openModal(event)}
-                className="px-3 py-2 rounded cursor-pointer hover:opacity-80"
-                style={{ backgroundColor: event.color + '20', color: event.color }}
+                className="px-3 py-2 rounded cursor-pointer hover:opacity-80 event-card"
+                style={{ borderLeftColor: event.color, backgroundColor: event.color + '20', color: event.color }}
               >
                 <div className="font-medium">{event.title}</div>
                 {event.description && (
@@ -92,17 +92,18 @@ function DayView() {
             <div
               key={index}
               className={`flex border-b ${isHourStart ? 'border-gray-300' : 'border-gray-100'}`}
-              style={{ minHeight: '60px' }}
+              style={{ minHeight: '48px' }}
             >
               {/* Time label */}
-              <div className={`w-20 p-2 text-xs text-gray-500 flex-shrink-0 ${!isHourStart && 'opacity-50'}`}>
+              <div className={`w-20 p-2 text-xs flex-shrink-0`} style={{ color: 'var(--text-secondary)', opacity: !isHourStart ? 0.5 : 1 }}>
                 {isHourStart && timeLabel}
               </div>
 
               {/* Event area */}
               <div
                 onClick={() => handleSlotClick(hour, minute)}
-                className="flex-1 p-2 cursor-pointer hover:bg-gray-50 transition-colors border-l border-gray-200"
+                className="flex-1 p-2 cursor-pointer hover:bg-gray-50 transition-colors border-l"
+                style={{ borderLeftColor: 'var(--color-border)' }}
               >
                 {slotEvents.map((event) => (
                   <div
@@ -111,11 +112,11 @@ function DayView() {
                       e.stopPropagation();
                       openModal(event);
                     }}
-                    className="px-3 py-2 mb-2 rounded cursor-pointer hover:opacity-80 shadow-sm"
-                    style={{ backgroundColor: event.color, color: 'white' }}
+                    className="px-3 py-2 mb-2 rounded cursor-pointer hover:opacity-80 shadow-sm event-card"
+                    style={{ borderLeftColor: event.color, backgroundColor: event.color, color: 'white' }}
                   >
-                    <div className="font-medium">{event.title}</div>
-                    <div className="text-xs opacity-90 mt-1">
+                    <div className="event-title">{event.title}</div>
+                    <div className="event-meta mt-1">
                       {formatTime(event.startDateTime)} - {formatTime(event.endDateTime)}
                     </div>
                     {event.description && (
